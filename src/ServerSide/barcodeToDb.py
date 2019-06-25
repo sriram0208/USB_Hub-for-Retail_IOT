@@ -1,10 +1,12 @@
+#!/usr/bin/env python
 import os
 import time
 import datetime
 import MySQLdb
 from time import strftime
- 
-from evdev import InputDevice, categorize, ecodes
+
+
+from evdev import InputDevice, categorize, ecodes  
 
 scancodes = {
     # Scancode: ASCIICode
@@ -25,11 +27,10 @@ capscodes = {
     50: u'M', 51: u'<', 52: u'>', 53: u'?', 54: u'RSHFT', 56: u'LALT',  57: u' ', 100: u'RALT'
 }
 
- 
-# Variables for MySQL
-db = MySQLdb.connect(host="localhost", user="root",passwd="password", db="barcode_database")
+# Variables for mysql
+db = MySQLdb.connect(host="localhost", user="root", passwd="password", db="barcode_database")
 cur = db.cursor()
- 
+
 def readBarcode(devicePath):
 
     dev = InputDevice(devicePath)
@@ -61,25 +62,27 @@ def readBarcode(devicePath):
                     return(x)
 
 while True:
-    barcode = readBarcode("/dev/input/event2")
-    print barcode
+    barCode = readBarcode("/dev/input/event0")
+    print barCode
     datetimeWrite = (time.strftime("%Y-%m-%d ") + time.strftime("%H:%M:%S"))
     print datetimeWrite
-    
-    sql = ("""INSERT INTO tempLog (datetime,barcode) VALUES (%s,%s)""",(datetimeWrite,barcode))
-    try:
-        print "Writing to database..."
-        # Execute the SQL command
-        cur.execute(*sql)
-        # Commit your changes in the database
-        db.commit()
-        print "Write Complete"
- 
+    sql = ("""INSERT INTO barcodeLog (datetime, barcode) VALUES (%s, %s)""", (datetimeWrite, barCode))
+    try: 
+    print "Writing to Database..."
+    # Execute the SQL Command
+    cur.execute(*sql)
+    # Commit the changes in the database
+    db.commit()
+    print "Write complete"
+
+    except KeyboardInterrupt:
+        cur.close()
+        db.close()
+    sys.exit()
+        break
+
     except:
-        # Rollback in case there is any error
+        # Roll back in case of an error
         db.rollback()
-        print "Failed writing to database"
- 
-    cur.close()
-    db.close()
+    print "Failed to write to database"
     break

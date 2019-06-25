@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html>
+
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript" src="jquery-3.4.1.js"></script>
+</head>
 <body>
 
 <h2>Get data as JSON from a PHP file on the server.</h2>
 
+<div id=div1></div>
 <p id="demo"></p>
-<button onclick=load()>Click me!</button>
+<button>Click me to get content!</button>
 
-<script>
+	<script type="text/javascript" src="jquery-3.4.1.js">
+
+
 	function load(){
 
 		var xmlhttp = new XMLHttpRequest();
@@ -15,10 +23,10 @@
 		xmlhttp.onreadystatechange = function() {
 		   if (this.readyState == 4 && this.status == 200) {
 		    myObj = JSON.parse(this.responseText);
-		    document.getElementById("demo").innerHTML = myObj.Date;
-		  // }
+		    document.getElementById("demo").innerHTML = "sdhbvjhdsb";
+		  }
 		};
-		xmlhttp.open("GET", "keyBoardJson.php", true);
+		xmlhttp.open("GET", "http://192.168.225.188/jsonBarcode.php", true);
 		xmlhttp.send();
 	}
 </script>
